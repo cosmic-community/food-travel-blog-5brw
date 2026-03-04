@@ -2,7 +2,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPostBySlug, getPosts, parseTags, formatDate } from '@/lib/cosmic'
+import { getPostBySlug, getPosts, parseTags, formatDate, markdownToHtml } from '@/lib/cosmic'
 import TagBadge from '@/components/TagBadge'
 
 interface PostPageProps {
@@ -20,7 +20,7 @@ export async function generateMetadata({
   }
 
   const description =
-    post.metadata?.content?.replace(/<[^>]*>/g, '').slice(0, 160) ||
+    post.metadata?.content?.replace(/[#*_\-\[\]()>`~]/g, '').replace(/\n+/g, ' ').slice(0, 160) ||
     `Read ${post.title} on Food Travel Blog`
 
   return {
@@ -60,6 +60,11 @@ export default async function PostPage({ params }: PostPageProps) {
   const author = post.metadata?.author
   const category = post.metadata?.category
   const featuredImage = post.metadata?.featured_image
+
+  // Changed: Convert markdown content to HTML for proper rendering
+  const contentHtml = post.metadata?.content
+    ? markdownToHtml(post.metadata.content)
+    : ''
 
   return (
     <article className="min-h-screen">
@@ -153,10 +158,11 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 py-12 md:py-16">
-        {post.metadata?.content && (
+        {/* Changed: Render parsed HTML from markdown instead of raw markdown */}
+        {contentHtml && (
           <div
             className="prose prose-lg prose-warm max-w-none prose-headings:font-serif prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-warm-900 prose-img:rounded-xl prose-img:shadow-lg"
-            dangerouslySetInnerHTML={{ __html: post.metadata.content }}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         )}
 
