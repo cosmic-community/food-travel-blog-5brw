@@ -1,4 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
+import { marked } from 'marked'
 import type { Post, Author, Category } from '@/types'
 
 export const cosmic = createBucketClient({
@@ -22,6 +23,11 @@ export function getMetafieldValue(field: unknown): string {
     return String((field as { key: unknown }).key)
   }
   return ''
+}
+
+// Changed: Added markdown-to-HTML conversion utility
+export function markdownToHtml(markdown: string): string {
+  return marked.parse(markdown, { async: false }) as string
 }
 
 export async function getPosts(): Promise<Post[]> {
