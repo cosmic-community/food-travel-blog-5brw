@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-warm-50 text-gray-900 antialiased;
+  }
+
+  ::selection {
+    @apply bg-terracotta-200 text-terracotta-900;
+  }
+}
+
+@layer components {
+  .prose img {
+    @apply rounded-xl shadow-lg;
+  }
+
+  .prose h2 {
+    @apply text-warm-900 font-serif;
+  }
+
+  .prose h3 {
+    @apply text-warm-800 font-serif;
+  }
+
+  .prose a {
+    @apply text-terracotta-600 hover:text-terracotta-700 transition-colors;
+  }
+
+  .prose blockquote {
+    @apply border-l-terracotta-400 bg-warm-100 rounded-r-lg py-1 px-4;
+  }
+}
